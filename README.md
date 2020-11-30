@@ -30,6 +30,7 @@ A plugin with Redis handler for [EveronLogger](https://github.com/oliwierptak/ev
     'host' => null,
     'port' => 6379,
     'timeout' => 0.0,
+    'password' => null,
     'persistentId' => null,
     'retryInterval' => 0,
     'readTimeout' => 0.0,

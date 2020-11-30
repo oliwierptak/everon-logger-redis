@@ -165,8 +165,7 @@ class RedisLoggerPluginTest extends TestCase
             ->setPersistentId('foo-bar')
             ->setReadTimeout(0.0)
             ->setRetryInterval(3)
-            ->setTimeout(10)
-            ->setPassword('hunter2');
+            ->setTimeout(10);
 
         $this->configurator = new LoggerConfigurator();
         $this->configurator->addPluginConfigurator($redisPluginConfigurator);
@@ -183,8 +182,6 @@ class RedisLoggerPluginTest extends TestCase
                 $this->redisPort,
                 10
             );
-
-            $this->redis->auth('hunter2');
         }
 
         return $this->redis;
