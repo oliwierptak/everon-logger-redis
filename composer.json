@@ -1,0 +1,47 @@
+{
+    "name": "everon/logger-redis",
+    "description": "Logger plugin with Redis handler for EveronLogger",
+    "minimum-stability": "stable",
+    "license": "MIT",
+    "require": {
+        "php": "^7.4",
+        "ext-redis": "*",
+        "predis/predis": "^1.1",
+        "everon/logger": "^1"
+    },
+    "require-dev": {
+        "ext-json": "*",
+        "phpunit/phpunit": "^9.4",
+        "popo/generator": "^3.0",
+        "symfony/var-dumper": "^5.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "Everon\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "EveronLoggerTests\\Suit\\": "tests/suit/",
+            "EveronLoggerTests\\Stub\\": "tests/stub/"
+        }
+    },
+    "scripts": {
+        "popo": [
+            "vendor/bin/popo generate -c .popo"
+        ],
+        "tests": [
+            "vendor/bin/phpunit --testdox --no-coverage"
+        ],
+        "tests-ac": [
+            "vendor/bin/phpunit --testdox --no-coverage --group acceptance tests/suit/Acceptance/"
+        ],
+        "tests-coverage": "vendor/bin/phpunit --testdox --group acceptance,default"
+    },
+    "scripts-descriptions": {
+        "popo": "Generate POPO files",
+        "tests": "Quick tests",
+        "tests-ac": "Quick AC tests",
+        "tests-coverage": "Tests with coverage"
+    }
+}
