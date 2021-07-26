@@ -45,6 +45,7 @@ A plugin with Redis handler for [EveronLogger](https://github.com/oliwierptak/ev
     ```php
     use Everon\Logger\Configurator\Plugin\LoggerConfigurator;
     use Everon\Logger\Configurator\Plugin\RedisLoggerPluginConfigurator;
+    use Everon\Logger\EveronLoggerFacade;
   
     $redisPluginConfigurator = (new RedisLoggerPluginConfigurator())
         ->setLogLevel('debug')
