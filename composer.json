@@ -7,12 +7,12 @@
         "php": "^8",
         "ext-redis": "*",
         "predis/predis": "^1.1",
-        "everon/logger": "^2"
+        "everon/logger": "dev-popo-5"
     },
     "require-dev": {
         "ext-json": "*",
         "phpunit/phpunit": "^9",
-        "popo/generator": "^4",
+        "popo/generator": "dev-yaml-support-5.0",
         "symfony/var-dumper": "^5"
     },
     "autoload": {
@@ -22,16 +22,17 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "EveronLoggerTests\\Suit\\": "tests/suit/",
+            "EveronLoggerTests\\Suit\\": "tests/suite/",
             "EveronLoggerTests\\Stub\\": "tests/stub/"
         }
     },
     "scripts": {
         "popo": [
-            "vendor/bin/popo generate -c .popo"
+            "vendor/bin/popo generate -c vendor/everon/logger/popo/shared-plugin.config.yml -s ./popo/everon-logger-redis.popo.yml"
         ],
-        "tests": [
-            "vendor/bin/phpunit --testdox --no-coverage --group acceptance tests/suit/Acceptance/"
+        "test": [
+            "@popo",
+            "vendor/bin/phpunit --testdox --no-coverage --group acceptance tests/suite/Acceptance/"
         ],
         "tests-coverage": "vendor/bin/phpunit --testdox --group acceptance,default"
     },

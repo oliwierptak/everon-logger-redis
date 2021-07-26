@@ -159,7 +159,7 @@ class RedisLoggerPluginTest extends TestCase
             ->setPluginClass(RedisLoggerPlugin::class)
             ->setLogLevel('debug');
 
-        $redisPluginConfigurator->getRedisConnection()
+        $redisPluginConfigurator->requireRedisConnection()
             ->setHost($this->redisHost)
             ->setPort($this->redisPort)
             ->setPersistentId('foo-bar')

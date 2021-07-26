@@ -1,0 +1,28 @@
+EveronLogger:
+  RedisLoggerPluginConfigurator:
+    default:
+      pluginClass: \Everon\Logger\Plugin\Redis\RedisLoggerPlugin::class
+      capSize: 0
+      redisConnection: RedisConnectionConfigurator::class
+    property: [
+      {name: key, comment: "The key name to push records to"},
+      {name: capSize, type: int, comment: "Number of entries to limit list size to, 0 = unlimited"},
+      {name: redisConnection, type: popo, comment: "Redis connection related settings"},
+    ]}}
+
+  RedisConnectionConfigurator:
+    default:
+      pluginClass: \Everon\Logger\Plugin\Redis\RedisLoggerPlugin::class
+      port: 6379
+      timeout: 0.0
+      retryInterval: 0
+      readTimeout: 0.0
+    property: [
+      {name: host, comment: "The key name to push records to"},
+      {name: port, type: int},
+      {name: timeout, type: float},
+      {name: password},
+      {name: persistentId},
+      {name: retryInterval, type: int},
+      {name: readTimeout, type: float},
+    ]}}
