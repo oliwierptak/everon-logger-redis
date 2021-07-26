@@ -7,12 +7,12 @@
         "php": "^8",
         "ext-redis": "*",
         "predis/predis": "^1.1",
-        "everon/logger": "dev-popo-5"
+        "everon/logger": "^4"
     },
     "require-dev": {
         "ext-json": "*",
         "phpunit/phpunit": "^9",
-        "popo/generator": "dev-yaml-support-5.0",
+        "popo/generator": "^5",
         "symfony/var-dumper": "^5"
     },
     "autoload": {
