@@ -76,10 +76,7 @@ class RedisLoggerPluginConfigurator implements \Everon\Logger\Contract\Configura
      */
     public function requireCapSize(): int
     {
-        if (static::METADATA['capSize']['type'] === 'popo' && $this->capSize === null) {
-            $popo = static::METADATA['capSize']['default'];
-            $this->capSize = new $popo;
-        }
+        $this->setupPopoProperty('capSize');
 
         if ($this->capSize === null) {
             throw new UnexpectedValueException('Required value of "capSize" has not been set');
@@ -89,7 +86,7 @@ class RedisLoggerPluginConfigurator implements \Everon\Logger\Contract\Configura
 
     public function hasCapSize(): bool
     {
-        return $this->capSize !== null || ($this->capSize !== null && array_key_exists('capSize', $this->updateMap));
+        return $this->capSize !== null;
     }
 
     /**
@@ -113,10 +110,7 @@ class RedisLoggerPluginConfigurator implements \Everon\Logger\Contract\Configura
      */
     public function requireKey(): string
     {
-        if (static::METADATA['key']['type'] === 'popo' && $this->key === null) {
-            $popo = static::METADATA['key']['default'];
-            $this->key = new $popo;
-        }
+        $this->setupPopoProperty('key');
 
         if ($this->key === null) {
             throw new UnexpectedValueException('Required value of "key" has not been set');
@@ -126,7 +120,7 @@ class RedisLoggerPluginConfigurator implements \Everon\Logger\Contract\Configura
 
     public function hasKey(): bool
     {
-        return $this->key !== null || ($this->key !== null && array_key_exists('key', $this->updateMap));
+        return $this->key !== null;
     }
 
     /**
@@ -150,10 +144,7 @@ class RedisLoggerPluginConfigurator implements \Everon\Logger\Contract\Configura
      */
     public function requireLogLevel(): string
     {
-        if (static::METADATA['logLevel']['type'] === 'popo' && $this->logLevel === null) {
-            $popo = static::METADATA['logLevel']['default'];
-            $this->logLevel = new $popo;
-        }
+        $this->setupPopoProperty('logLevel');
 
         if ($this->logLevel === null) {
             throw new UnexpectedValueException('Required value of "logLevel" has not been set');
@@ -163,7 +154,7 @@ class RedisLoggerPluginConfigurator implements \Everon\Logger\Contract\Configura
 
     public function hasLogLevel(): bool
     {
-        return $this->logLevel !== null || ($this->logLevel !== null && array_key_exists('logLevel', $this->updateMap));
+        return $this->logLevel !== null;
     }
 
     public function setPluginClass(?string $pluginClass): self
@@ -178,10 +169,7 @@ class RedisLoggerPluginConfigurator implements \Everon\Logger\Contract\Configura
 
     public function requirePluginClass(): string
     {
-        if (static::METADATA['pluginClass']['type'] === 'popo' && $this->pluginClass === null) {
-            $popo = static::METADATA['pluginClass']['default'];
-            $this->pluginClass = new $popo;
-        }
+        $this->setupPopoProperty('pluginClass');
 
         if ($this->pluginClass === null) {
             throw new UnexpectedValueException('Required value of "pluginClass" has not been set');
@@ -191,7 +179,7 @@ class RedisLoggerPluginConfigurator implements \Everon\Logger\Contract\Configura
 
     public function hasPluginClass(): bool
     {
-        return $this->pluginClass !== null || ($this->pluginClass !== null && array_key_exists('pluginClass', $this->updateMap));
+        return $this->pluginClass !== null;
     }
 
     /**
@@ -215,10 +203,7 @@ class RedisLoggerPluginConfigurator implements \Everon\Logger\Contract\Configura
      */
     public function requirePluginFactoryClass(): string
     {
-        if (static::METADATA['pluginFactoryClass']['type'] === 'popo' && $this->pluginFactoryClass === null) {
-            $popo = static::METADATA['pluginFactoryClass']['default'];
-            $this->pluginFactoryClass = new $popo;
-        }
+        $this->setupPopoProperty('pluginFactoryClass');
 
         if ($this->pluginFactoryClass === null) {
             throw new UnexpectedValueException('Required value of "pluginFactoryClass" has not been set');
@@ -228,7 +213,7 @@ class RedisLoggerPluginConfigurator implements \Everon\Logger\Contract\Configura
 
     public function hasPluginFactoryClass(): bool
     {
-        return $this->pluginFactoryClass !== null || ($this->pluginFactoryClass !== null && array_key_exists('pluginFactoryClass', $this->updateMap));
+        return $this->pluginFactoryClass !== null;
     }
 
     /**
@@ -252,10 +237,7 @@ class RedisLoggerPluginConfigurator implements \Everon\Logger\Contract\Configura
      */
     public function requireRedisConnection(): RedisConnectionConfigurator
     {
-        if (static::METADATA['redisConnection']['type'] === 'popo' && $this->redisConnection === null) {
-            $popo = static::METADATA['redisConnection']['default'];
-            $this->redisConnection = new $popo;
-        }
+        $this->setupPopoProperty('redisConnection');
 
         if ($this->redisConnection === null) {
             throw new UnexpectedValueException('Required value of "redisConnection" has not been set');
@@ -265,7 +247,7 @@ class RedisLoggerPluginConfigurator implements \Everon\Logger\Contract\Configura
 
     public function hasRedisConnection(): bool
     {
-        return $this->redisConnection !== null || ($this->redisConnection !== null && array_key_exists('redisConnection', $this->updateMap));
+        return $this->redisConnection !== null;
     }
 
     /**
@@ -289,10 +271,7 @@ class RedisLoggerPluginConfigurator implements \Everon\Logger\Contract\Configura
      */
     public function requireShouldBubble(): bool
     {
-        if (static::METADATA['shouldBubble']['type'] === 'popo' && $this->shouldBubble === null) {
-            $popo = static::METADATA['shouldBubble']['default'];
-            $this->shouldBubble = new $popo;
-        }
+        $this->setupPopoProperty('shouldBubble');
 
         if ($this->shouldBubble === null) {
             throw new UnexpectedValueException('Required value of "shouldBubble" has not been set');
@@ -302,7 +281,7 @@ class RedisLoggerPluginConfigurator implements \Everon\Logger\Contract\Configura
 
     public function hasShouldBubble(): bool
     {
-        return $this->shouldBubble !== null || ($this->shouldBubble !== null && array_key_exists('shouldBubble', $this->updateMap));
+        return $this->shouldBubble !== null;
     }
 
     #[\JetBrains\PhpStorm\ArrayShape(self::SHAPE_PROPERTIES)]
@@ -359,6 +338,11 @@ class RedisLoggerPluginConfigurator implements \Everon\Logger\Contract\Configura
         return empty($this->updateMap) === true;
     }
 
+    public function listModifiedProperties(): array
+    {
+        return array_keys($this->updateMap);
+    }
+
     public function requireAll(): self
     {
         $errors = [];
@@ -413,5 +397,13 @@ class RedisLoggerPluginConfigurator implements \Everon\Logger\Contract\Configura
         }
 
         return $this;
+    }
+
+    protected function setupPopoProperty($propertyName): void
+    {
+        if (static::METADATA[$propertyName]['type'] === 'popo' && $this->$propertyName === null) {
+            $popo = static::METADATA[$propertyName]['default'];
+            $this->$propertyName = new $popo;
+        }
     }
 }

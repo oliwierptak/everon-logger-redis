@@ -81,10 +81,7 @@ class RedisConnectionConfigurator implements \Everon\Logger\Contract\Configurato
      */
     public function requireHost(): string
     {
-        if (static::METADATA['host']['type'] === 'popo' && $this->host === null) {
-            $popo = static::METADATA['host']['default'];
-            $this->host = new $popo;
-        }
+        $this->setupPopoProperty('host');
 
         if ($this->host === null) {
             throw new UnexpectedValueException('Required value of "host" has not been set');
@@ -94,7 +91,7 @@ class RedisConnectionConfigurator implements \Everon\Logger\Contract\Configurato
 
     public function hasHost(): bool
     {
-        return $this->host !== null || ($this->host !== null && array_key_exists('host', $this->updateMap));
+        return $this->host !== null;
     }
 
     /**
@@ -118,10 +115,7 @@ class RedisConnectionConfigurator implements \Everon\Logger\Contract\Configurato
      */
     public function requireLogLevel(): string
     {
-        if (static::METADATA['logLevel']['type'] === 'popo' && $this->logLevel === null) {
-            $popo = static::METADATA['logLevel']['default'];
-            $this->logLevel = new $popo;
-        }
+        $this->setupPopoProperty('logLevel');
 
         if ($this->logLevel === null) {
             throw new UnexpectedValueException('Required value of "logLevel" has not been set');
@@ -131,7 +125,7 @@ class RedisConnectionConfigurator implements \Everon\Logger\Contract\Configurato
 
     public function hasLogLevel(): bool
     {
-        return $this->logLevel !== null || ($this->logLevel !== null && array_key_exists('logLevel', $this->updateMap));
+        return $this->logLevel !== null;
     }
 
     public function setPassword(?string $password): self
@@ -146,10 +140,7 @@ class RedisConnectionConfigurator implements \Everon\Logger\Contract\Configurato
 
     public function requirePassword(): string
     {
-        if (static::METADATA['password']['type'] === 'popo' && $this->password === null) {
-            $popo = static::METADATA['password']['default'];
-            $this->password = new $popo;
-        }
+        $this->setupPopoProperty('password');
 
         if ($this->password === null) {
             throw new UnexpectedValueException('Required value of "password" has not been set');
@@ -159,7 +150,7 @@ class RedisConnectionConfigurator implements \Everon\Logger\Contract\Configurato
 
     public function hasPassword(): bool
     {
-        return $this->password !== null || ($this->password !== null && array_key_exists('password', $this->updateMap));
+        return $this->password !== null;
     }
 
     public function setPersistentId(?string $persistentId): self
@@ -174,10 +165,7 @@ class RedisConnectionConfigurator implements \Everon\Logger\Contract\Configurato
 
     public function requirePersistentId(): string
     {
-        if (static::METADATA['persistentId']['type'] === 'popo' && $this->persistentId === null) {
-            $popo = static::METADATA['persistentId']['default'];
-            $this->persistentId = new $popo;
-        }
+        $this->setupPopoProperty('persistentId');
 
         if ($this->persistentId === null) {
             throw new UnexpectedValueException('Required value of "persistentId" has not been set');
@@ -187,7 +175,7 @@ class RedisConnectionConfigurator implements \Everon\Logger\Contract\Configurato
 
     public function hasPersistentId(): bool
     {
-        return $this->persistentId !== null || ($this->persistentId !== null && array_key_exists('persistentId', $this->updateMap));
+        return $this->persistentId !== null;
     }
 
     public function setPluginClass(?string $pluginClass): self
@@ -202,10 +190,7 @@ class RedisConnectionConfigurator implements \Everon\Logger\Contract\Configurato
 
     public function requirePluginClass(): string
     {
-        if (static::METADATA['pluginClass']['type'] === 'popo' && $this->pluginClass === null) {
-            $popo = static::METADATA['pluginClass']['default'];
-            $this->pluginClass = new $popo;
-        }
+        $this->setupPopoProperty('pluginClass');
 
         if ($this->pluginClass === null) {
             throw new UnexpectedValueException('Required value of "pluginClass" has not been set');
@@ -215,7 +200,7 @@ class RedisConnectionConfigurator implements \Everon\Logger\Contract\Configurato
 
     public function hasPluginClass(): bool
     {
-        return $this->pluginClass !== null || ($this->pluginClass !== null && array_key_exists('pluginClass', $this->updateMap));
+        return $this->pluginClass !== null;
     }
 
     /**
@@ -239,10 +224,7 @@ class RedisConnectionConfigurator implements \Everon\Logger\Contract\Configurato
      */
     public function requirePluginFactoryClass(): string
     {
-        if (static::METADATA['pluginFactoryClass']['type'] === 'popo' && $this->pluginFactoryClass === null) {
-            $popo = static::METADATA['pluginFactoryClass']['default'];
-            $this->pluginFactoryClass = new $popo;
-        }
+        $this->setupPopoProperty('pluginFactoryClass');
 
         if ($this->pluginFactoryClass === null) {
             throw new UnexpectedValueException('Required value of "pluginFactoryClass" has not been set');
@@ -252,7 +234,7 @@ class RedisConnectionConfigurator implements \Everon\Logger\Contract\Configurato
 
     public function hasPluginFactoryClass(): bool
     {
-        return $this->pluginFactoryClass !== null || ($this->pluginFactoryClass !== null && array_key_exists('pluginFactoryClass', $this->updateMap));
+        return $this->pluginFactoryClass !== null;
     }
 
     public function setPort(?int $port): self
@@ -267,10 +249,7 @@ class RedisConnectionConfigurator implements \Everon\Logger\Contract\Configurato
 
     public function requirePort(): int
     {
-        if (static::METADATA['port']['type'] === 'popo' && $this->port === null) {
-            $popo = static::METADATA['port']['default'];
-            $this->port = new $popo;
-        }
+        $this->setupPopoProperty('port');
 
         if ($this->port === null) {
             throw new UnexpectedValueException('Required value of "port" has not been set');
@@ -280,7 +259,7 @@ class RedisConnectionConfigurator implements \Everon\Logger\Contract\Configurato
 
     public function hasPort(): bool
     {
-        return $this->port !== null || ($this->port !== null && array_key_exists('port', $this->updateMap));
+        return $this->port !== null;
     }
 
     public function setReadTimeout(?float $readTimeout): self
@@ -295,10 +274,7 @@ class RedisConnectionConfigurator implements \Everon\Logger\Contract\Configurato
 
     public function requireReadTimeout(): float
     {
-        if (static::METADATA['readTimeout']['type'] === 'popo' && $this->readTimeout === null) {
-            $popo = static::METADATA['readTimeout']['default'];
-            $this->readTimeout = new $popo;
-        }
+        $this->setupPopoProperty('readTimeout');
 
         if ($this->readTimeout === null) {
             throw new UnexpectedValueException('Required value of "readTimeout" has not been set');
@@ -308,7 +284,7 @@ class RedisConnectionConfigurator implements \Everon\Logger\Contract\Configurato
 
     public function hasReadTimeout(): bool
     {
-        return $this->readTimeout !== null || ($this->readTimeout !== null && array_key_exists('readTimeout', $this->updateMap));
+        return $this->readTimeout !== null;
     }
 
     public function setRetryInterval(?int $retryInterval): self
@@ -323,10 +299,7 @@ class RedisConnectionConfigurator implements \Everon\Logger\Contract\Configurato
 
     public function requireRetryInterval(): int
     {
-        if (static::METADATA['retryInterval']['type'] === 'popo' && $this->retryInterval === null) {
-            $popo = static::METADATA['retryInterval']['default'];
-            $this->retryInterval = new $popo;
-        }
+        $this->setupPopoProperty('retryInterval');
 
         if ($this->retryInterval === null) {
             throw new UnexpectedValueException('Required value of "retryInterval" has not been set');
@@ -336,7 +309,7 @@ class RedisConnectionConfigurator implements \Everon\Logger\Contract\Configurato
 
     public function hasRetryInterval(): bool
     {
-        return $this->retryInterval !== null || ($this->retryInterval !== null && array_key_exists('retryInterval', $this->updateMap));
+        return $this->retryInterval !== null;
     }
 
     /**
@@ -360,10 +333,7 @@ class RedisConnectionConfigurator implements \Everon\Logger\Contract\Configurato
      */
     public function requireShouldBubble(): bool
     {
-        if (static::METADATA['shouldBubble']['type'] === 'popo' && $this->shouldBubble === null) {
-            $popo = static::METADATA['shouldBubble']['default'];
-            $this->shouldBubble = new $popo;
-        }
+        $this->setupPopoProperty('shouldBubble');
 
         if ($this->shouldBubble === null) {
             throw new UnexpectedValueException('Required value of "shouldBubble" has not been set');
@@ -373,7 +343,7 @@ class RedisConnectionConfigurator implements \Everon\Logger\Contract\Configurato
 
     public function hasShouldBubble(): bool
     {
-        return $this->shouldBubble !== null || ($this->shouldBubble !== null && array_key_exists('shouldBubble', $this->updateMap));
+        return $this->shouldBubble !== null;
     }
 
     public function setTimeout(?float $timeout): self
@@ -388,10 +358,7 @@ class RedisConnectionConfigurator implements \Everon\Logger\Contract\Configurato
 
     public function requireTimeout(): float
     {
-        if (static::METADATA['timeout']['type'] === 'popo' && $this->timeout === null) {
-            $popo = static::METADATA['timeout']['default'];
-            $this->timeout = new $popo;
-        }
+        $this->setupPopoProperty('timeout');
 
         if ($this->timeout === null) {
             throw new UnexpectedValueException('Required value of "timeout" has not been set');
@@ -401,7 +368,7 @@ class RedisConnectionConfigurator implements \Everon\Logger\Contract\Configurato
 
     public function hasTimeout(): bool
     {
-        return $this->timeout !== null || ($this->timeout !== null && array_key_exists('timeout', $this->updateMap));
+        return $this->timeout !== null;
     }
 
     #[\JetBrains\PhpStorm\ArrayShape(self::SHAPE_PROPERTIES)]
@@ -460,6 +427,11 @@ class RedisConnectionConfigurator implements \Everon\Logger\Contract\Configurato
     public function isNew(): bool
     {
         return empty($this->updateMap) === true;
+    }
+
+    public function listModifiedProperties(): array
+    {
+        return array_keys($this->updateMap);
     }
 
     public function requireAll(): self
@@ -540,5 +512,13 @@ class RedisConnectionConfigurator implements \Everon\Logger\Contract\Configurato
         }
 
         return $this;
+    }
+
+    protected function setupPopoProperty($propertyName): void
+    {
+        if (static::METADATA[$propertyName]['type'] === 'popo' && $this->$propertyName === null) {
+            $popo = static::METADATA[$propertyName]['default'];
+            $this->$propertyName = new $popo;
+        }
     }
 }
