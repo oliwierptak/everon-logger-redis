@@ -12,14 +12,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - name: Build the docker-compose stack
+        run: docker-compose up -d
       - name: Install dependencies
         run: docker-compose run cli composer install
       - name: Static code analysis
         run: docker-compose run cli composer phpstan
       - name: Run the tests
-        run: docker-compose run cli vendor/bin/phpunit --testdox --no-coverage
-        env:
-          # The hostname used to communicate with the Redis service container
-          TEST_REDIS_HOST: dev-redis
-          # The default Redis port
-          TEST_REDIS_PORT: 6379
+        run: docker-compose run cli composer tests
