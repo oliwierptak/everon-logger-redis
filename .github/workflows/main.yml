@@ -17,4 +17,4 @@ jobs:
       - name: Static code analysis
         run: docker-compose run cli composer phpstan
       - name: Run the tests
-        run: docker-compose run cli composer tests
+        run: docker-compose run cli vendor/bin/phpunit --testdox --no-coverage
