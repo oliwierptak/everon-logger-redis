@@ -6,22 +6,22 @@ A plugin with Redis handler for [EveronLogger](https://github.com/oliwierptak/ev
 
 - Configurator
 
-    `Everon\Logger\Configurator\Plugin\RedisLoggerPluginConfigurator`
+    `Everon\Shared\LoggerRedis\Configurator\Plugin\RedisLoggerPluginConfigurator`
     
 - Redis Connection Configurator
 
-    `Everon\Logger\Configurator\Plugin\RedisConnectionConfigurator`
+    `Everon\Shared\LoggerRedis\Configurator\Plugin\RedisConnectionConfigurator`
  
 - Default Options
 
     ```php
-    'pluginClass' => \Everon\Logger\Plugin\Redis\RedisLoggerPlugin::class,
+    'pluginClass' => \Everon\LoggerRedis\Plugin\Redis\RedisLoggerPlugin::class,
     'pluginFactoryClass' => null,
-    'logLevel' => 'debug',
+    'logLevel' => \Monolog\Level::Debug,
     'shouldBubble' => true,
     'key' => null,
     'capSize' => 0,
-    'redisConnection' => null,
+    'redisConnection' => \Everon\Shared\LoggerRedis\Configurator\Plugin\RedisConnectionConfigurator,
     ```
   
 - Default Options for `RedisConnectionConfigurator`
@@ -38,27 +38,29 @@ A plugin with Redis handler for [EveronLogger](https://github.com/oliwierptak/ev
 
 - Plugin
 
-  `Everon\Logger\Plugin\Redis\RedisLoggerPlugin`
+  `Everon\LoggerRedis\Plugin\Redis\RedisLoggerPlugin`
 
 - Usage
 
     ```php
-    use Everon\Logger\Configurator\Plugin\LoggerConfigurator;
-    use Everon\Logger\Configurator\Plugin\RedisLoggerPluginConfigurator;
+    use Everon\Shared\Logger\Configurator\Plugin\LoggerConfigurator;
+    use Everon\Shared\LoggerRedis\Configurator\Plugin\RedisLoggerPluginConfigurator;
     use Everon\Logger\EveronLoggerFacade;
   
     $redisPluginConfigurator = (new RedisLoggerPluginConfigurator())
-        ->setLogLevel('debug')
-        ->setKey('foo-bar-queue');
+      ->setLogLevel(\Monolog\Level::Info)
+      ->setKey('foo-bar-queue');
   
-    $redisPluginConfigurator->getRedisConnection()
-        ->setHost('redis.host')
-        ->setPort(6379)
-        ->setTimeout(10);
+    $redisPluginConfigurator->requireRedisConnection()
+      ->setPersistentId('persistent-connection')
+      ->setHost('redis.host')
+      ->setReadTimeout(0.5)
+      ->setRetryInterval(3)
+      ->setTimeout(10);
   
     $configurator = (new LoggerConfigurator)
-        ->setName('everon-logger-example')
-        ->addPluginConfigurator($redisPluginConfigurator);
+      ->setName('everon-logger-example')
+      ->add($redisPluginConfigurator);
   
     $logger = (new EveronLoggerFacade)->buildLogger($configurator);
     
@@ -67,9 +69,8 @@ A plugin with Redis handler for [EveronLogger](https://github.com/oliwierptak/ev
 
 ## Requirements
 
-- PHP v8.x
-
-_Note_: Use v2.x for compatibility with PHP v7.4.
+- PHP v8.1.x
+- Monolog v3.x
 
 ## Installation
 

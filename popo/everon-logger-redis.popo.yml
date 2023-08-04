@@ -1,7 +1,11 @@
+$:
+  config:
+    namespace: Everon\Shared\LoggerRedis\Configurator\Plugin
+
 EveronLogger:
   RedisLoggerPluginConfigurator:
     default:
-      pluginClass: \Everon\Logger\Plugin\Redis\RedisLoggerPlugin::class
+      pluginClass: \Everon\LoggerRedis\Plugin\Redis\RedisLoggerPlugin::class
       capSize: 0
       redisConnection: RedisConnectionConfigurator::class
     property: [
@@ -12,7 +16,7 @@ EveronLogger:
 
   RedisConnectionConfigurator:
     default:
-      pluginClass: \Everon\Logger\Plugin\Redis\RedisLoggerPlugin::class
+      pluginClass: \Everon\LoggerRedis\Plugin\Redis\RedisLoggerPlugin::class
       port: 6379
       timeout: 0.0
       retryInterval: 0

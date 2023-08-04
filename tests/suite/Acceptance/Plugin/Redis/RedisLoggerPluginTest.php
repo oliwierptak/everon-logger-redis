@@ -4,13 +4,14 @@ declare(strict_types = 1);
 
 namespace EveronLoggerTests\Suit\Acceptance\Plugin\Redis;
 
-use Everon\Logger\Configurator\Plugin\LoggerConfigurator;
-use Everon\Logger\Configurator\Plugin\RedisLoggerPluginConfigurator;
 use Everon\Logger\Contract\Configurator\LoggerConfiguratorInterface;
 use Everon\Logger\EveronLoggerFacade;
-use Everon\Logger\Plugin\Redis\RedisLoggerPlugin;
+use Everon\LoggerRedis\Plugin\Redis\RedisLoggerPlugin;
+use Everon\Shared\Logger\Configurator\Plugin\LoggerConfigurator;
+use Everon\Shared\LoggerRedis\Configurator\Plugin\RedisLoggerPluginConfigurator;
 use EveronLoggerTests\Stub\Processor\MemoryUsageProcessorStub;
 use EveronLoggerTests\Suit\Configurator\TestLoggerConfigurator;
+use Monolog\Level;
 use PHPUnit\Framework\TestCase;
 use Redis;
 use function addslashes;
@@ -54,7 +55,7 @@ class RedisLoggerPluginTest extends TestCase
     {
         $this->configurator
             ->getConfiguratorByPluginName(RedisLoggerPlugin::class)
-            ->setLogLevel('info');
+            ->setLogLevel(Level::Info);
 
         $logger = $this->facade->buildLogger($this->configurator);
 
@@ -67,20 +68,103 @@ class RedisLoggerPluginTest extends TestCase
     {
         $this->configurator
             ->getConfiguratorByPluginName(RedisLoggerPlugin::class)
-            ->setLogLevel('info')
+            ->setLogLevel(Level::Info)
             ->setKey(static::REDIS_QUEUE);
 
         $logger = $this->facade->buildLogger($this->configurator);
 
         $logger->info('foo bar');
-        $this->assertRedis((new TestLoggerConfigurator())
-            ->setMessage('foo bar')
-            ->setLevel('info'));
+        $this->assertRedis(
+            (new TestLoggerConfigurator())
+                ->setMessage('foo bar')
+                ->setLogLevel(Level::Info),
+        );
 
         $logger->warning('foo bar warning');
-        $this->assertRedis((new TestLoggerConfigurator())
-            ->setMessage('foo bar warning')
-            ->setLevel('warning'));
+        $this->assertRedis(
+            (new TestLoggerConfigurator())
+                ->setMessage('foo bar warning')
+                ->setLogLevel(Level::Warning),
+        );
+    }
+
+    public function test_should_log_context(): void
+    {
+        $this->configurator
+            ->getConfiguratorByPluginName(RedisLoggerPlugin::class)
+            ->setLogLevel(Level::Info)
+            ->setKey(static::REDIS_QUEUE);
+
+        $logger = $this->facade->buildLogger($this->configurator);
+
+        $logger->info('foo bar', ['buzz' => 'lorem ipsum']);
+
+        $this->assertRedis(
+            (new TestLoggerConfigurator())
+                ->setMessage('foo bar')
+                ->setLogLevel(Level::Info)
+                ->setContext(['buzz' => 'lorem ipsum']),
+        );
+    }
+
+    public function test_should_log_context_and_extra(): void
+    {
+        $this->configurator
+            ->addProcessor(MemoryUsageProcessorStub::class)
+            ->getConfiguratorByPluginName(RedisLoggerPlugin::class)
+            ->setLogLevel(Level::Info)
+            ->setKey(static::REDIS_QUEUE);
+
+        $logger = $this->facade->buildLogger($this->configurator);
+
+        $logger->info('foo bar', ['buzz' => 'lorem ipsum']);
+
+        $this->assertRedis(
+            (new TestLoggerConfigurator())
+                ->setMessage('foo bar')
+                ->setLogLevel(Level::Info)
+                ->setContext(['buzz' => 'lorem ipsum'])
+                ->setExtra(['memory_peak_usage' => '5 MB']),
+        );
+    }
+
+    protected function setUp(): void
+    {
+        $this->redisHost = $_ENV['TEST_REDIS_HOST'];
+        $this->redisPort = (int)$_ENV['TEST_REDIS_PORT'];
+
+        $this->getRedis()->flushAll();
+
+        $redisPluginConfigurator = (new RedisLoggerPluginConfigurator())
+            ->setPluginClass(RedisLoggerPlugin::class)
+            ->setLogLevel(Level::Debug);
+
+        $redisPluginConfigurator->requireRedisConnection()
+            ->setHost($this->redisHost)
+            ->setPort($this->redisPort)
+            ->setPersistentId('foo-bar')
+            ->setReadTimeout(0.0)
+            ->setRetryInterval(3)
+            ->setTimeout(10);
+
+        $this->configurator = new LoggerConfigurator();
+        $this->configurator->add($redisPluginConfigurator);
+
+        $this->facade = new EveronLoggerFacade();
+    }
+
+    protected function getRedis(): Redis
+    {
+        if (empty($this->redis)) {
+            $this->redis = new Redis();
+            $this->redis->pconnect(
+                $this->redisHost,
+                $this->redisPort,
+                10,
+            );
+        }
+
+        return $this->redis;
     }
 
     protected function assertRedis(TestLoggerConfigurator $configurator): void
@@ -103,87 +187,12 @@ class RedisLoggerPluginTest extends TestCase
 
             $expected = sprintf(
                 '%s: %s %s %s',
-                strtoupper($configurator->getLevel()),
+                strtoupper($configurator->getLogLevel()->getName()),
                 $configurator->getMessage(),
                 $jsonContextString,
-                $jsonExtraString
+                $jsonExtraString,
             );
             $this->assertEquals($expected, trim($tokens[1]));
         }
-    }
-
-    public function test_should_log_context(): void
-    {
-        $this->configurator
-            ->getConfiguratorByPluginName(RedisLoggerPlugin::class)
-            ->setLogLevel('info')
-            ->setKey(static::REDIS_QUEUE);
-
-        $logger = $this->facade->buildLogger($this->configurator);
-
-        $logger->info('foo bar', ['buzz' => 'lorem ipsum']);
-
-        $this->assertRedis((new TestLoggerConfigurator())
-            ->setMessage('foo bar')
-            ->setLevel('info')
-            ->setContext(['buzz' => 'lorem ipsum']));
-    }
-
-    public function test_should_log_context_and_extra(): void
-    {
-        $this->configurator
-            ->addProcessorClass(MemoryUsageProcessorStub::class)
-            ->getConfiguratorByPluginName(RedisLoggerPlugin::class)
-            ->setLogLevel('info')
-            ->setKey(static::REDIS_QUEUE);
-
-        $logger = $this->facade->buildLogger($this->configurator);
-
-        $logger->info('foo bar', ['buzz' => 'lorem ipsum']);
-
-        $this->assertRedis((new TestLoggerConfigurator())
-            ->setMessage('foo bar')
-            ->setLevel('info')
-            ->setContext(['buzz' => 'lorem ipsum'])
-            ->setExtra(['memory_peak_usage' => '5 MB']));
-    }
-
-    protected function setUp(): void
-    {
-        $this->redisHost = $_ENV['TEST_REDIS_HOST'];
-        $this->redisPort = (int) $_ENV['TEST_REDIS_PORT'];
-
-        $this->getRedis()->flushAll();
-
-        $redisPluginConfigurator = (new RedisLoggerPluginConfigurator())
-            ->setPluginClass(RedisLoggerPlugin::class)
-            ->setLogLevel('debug');
-
-        $redisPluginConfigurator->requireRedisConnection()
-            ->setHost($this->redisHost)
-            ->setPort($this->redisPort)
-            ->setPersistentId('foo-bar')
-            ->setReadTimeout(0.0)
-            ->setRetryInterval(3)
-            ->setTimeout(10);
-
-        $this->configurator = new LoggerConfigurator();
-        $this->configurator->addPluginConfigurator($redisPluginConfigurator);
-
-        $this->facade = new EveronLoggerFacade();
-    }
-
-    public function getRedis(): Redis
-    {
-        if (empty($this->redis)) {
-            $this->redis = new Redis();
-            $this->redis->pconnect(
-                $this->redisHost,
-                $this->redisPort,
-                10
-            );
-        }
-
-        return $this->redis;
     }
 }

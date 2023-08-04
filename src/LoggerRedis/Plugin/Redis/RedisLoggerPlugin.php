@@ -2,11 +2,10 @@
 
 declare(strict_types = 1);
 
-namespace Everon\Logger\Plugin\Redis;
+namespace Everon\LoggerRedis\Plugin\Redis;
 
-use Everon\Logger\Configurator\Plugin\RedisLoggerPluginConfigurator;
 use Everon\Logger\Contract\Plugin\LoggerPluginInterface;
-use JetBrains\PhpStorm\Pure;
+use Everon\Shared\LoggerRedis\Configurator\Plugin\RedisLoggerPluginConfigurator;
 use Monolog\Handler\HandlerInterface;
 use Monolog\Handler\RedisHandler;
 use Monolog\Logger;
@@ -14,23 +13,23 @@ use Redis;
 
 class RedisLoggerPlugin implements LoggerPluginInterface
 {
-    public function __construct(protected RedisLoggerPluginConfigurator $configurator)
-    {
-    }
+    public function __construct(protected RedisLoggerPluginConfigurator $configurator) {}
 
-    #[Pure] public function canRun(): bool
+    public function canRun(): bool
     {
         return $this->configurator->hasKey();
     }
 
     public function buildHandler(): HandlerInterface
     {
+        $this->validate();
+
         return new RedisHandler(
             $this->buildRedis(),
-            $this->configurator->getKey(),
+            (string)$this->configurator->getKey(),
             Logger::toMonologLevel($this->configurator->getLogLevel()),
-            $this->configurator->shouldBubble(),
-            $this->configurator->getCapSize(),
+            (bool)$this->configurator->shouldBubble(),
+            (int)$this->configurator->getCapSize(),
         );
     }
 
@@ -53,23 +52,24 @@ class RedisLoggerPlugin implements LoggerPluginInterface
         $redis = new Redis();
 
         if ($this->configurator->requireRedisConnection()->getPersistentId() !== null) {
+            /* @phpstan-ignore-next-line */
             $redis->pconnect(
-                $this->configurator->requireRedisConnection()->getHost(),
-                $this->configurator->requireRedisConnection()->getPort(),
-                $this->configurator->requireRedisConnection()->getTimeout(),
+                (string)$this->configurator->requireRedisConnection()->getHost(),
+                (int)$this->configurator->requireRedisConnection()->getPort(),
+                (float)$this->configurator->requireRedisConnection()->getTimeout(),
                 $this->configurator->requireRedisConnection()->getPersistentId(),
                 $this->configurator->requireRedisConnection()->getRetryInterval(),
-                $this->configurator->requireRedisConnection()->getReadTimeout()
+                (float)$this->configurator->requireRedisConnection()->getReadTimeout(),
             );
         }
         else {
             $redis->connect(
-                $this->configurator->requireRedisConnection()->getHost(),
-                $this->configurator->requireRedisConnection()->getPort(),
-                $this->configurator->requireRedisConnection()->getTimeout(),
+                (string)$this->configurator->requireRedisConnection()->getHost(),
+                (int)$this->configurator->requireRedisConnection()->getPort(),
+                (float)$this->configurator->requireRedisConnection()->getTimeout(),
                 null,
                 $this->configurator->requireRedisConnection()->getRetryInterval(),
-                $this->configurator->requireRedisConnection()->getReadTimeout()
+                (float)$this->configurator->requireRedisConnection()->getReadTimeout(),
             );
         }
 

@@ -4,16 +4,17 @@
     "minimum-stability": "stable",
     "license": "MIT",
     "require": {
-        "php": "^8",
+        "php": "^8.1",
         "ext-redis": "*",
         "predis/predis": "^1.1",
-        "everon/logger": "^4"
+        "everon/logger": "^3"
     },
     "require-dev": {
         "ext-json": "*",
-        "phpunit/phpunit": "^9",
-        "popo/generator": "^5",
-        "symfony/var-dumper": "^5"
+        "phpunit/phpunit": "^10",
+        "popo/generator": "^6",
+        "symfony/var-dumper": "^5|^6",
+        "phpstan/phpstan": "^1.10"
     },
     "autoload": {
         "psr-4": {
@@ -27,14 +28,17 @@
         }
     },
     "scripts": {
+        "phpstan": [
+            "vendor/bin/phpstan analyse -c phpstan.neon"
+        ],
         "popo": [
             "vendor/bin/popo generate -c vendor/everon/logger/popo/shared-plugin.config.yml -s ./popo/everon-logger-redis.popo.yml"
         ],
-        "test": [
+        "tests": [
             "@popo",
-            "vendor/bin/phpunit --testdox --no-coverage --group acceptance tests/suite/Acceptance/"
+            "vendor/bin/phpunit --testdox --no-coverage"
         ],
-        "tests-coverage": "vendor/bin/phpunit --testdox --group acceptance,default"
+        "tests-coverage": "XDEBUG_MODE=coverage vendor/bin/phpunit --testdox"
     },
     "scripts-descriptions": {
         "popo": "Generate POPO files",
