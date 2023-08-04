@@ -1,5 +1,7 @@
 # EveronLoggerRedis
 
+[![Build and run tests](https://github.com/oliwierptak/everon-logger-redis/actions/workflows/main.yml/badge.svg)](https://github.com/oliwierptak/everon-logger-redis/actions/workflows/main.yml)
+
 A plugin with Redis handler for [EveronLogger](https://github.com/oliwierptak/everon-logger).
  
 ## Configuration
