@@ -37,8 +37,6 @@ services:
       - ../../:/sources/
     environment:
       - TERM=xterm-256color
-      - TEST_REDIS_HOST=dev-redis
-      - TEST_REDIS_PORT=6379
     stdin_open: true # docker run -i
     tty: true        # docker run -t
     command: /bin/bash
