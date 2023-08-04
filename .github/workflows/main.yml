@@ -18,3 +18,8 @@ jobs:
         run: docker-compose run cli composer phpstan
       - name: Run the tests
         run: docker-compose run cli vendor/bin/phpunit --testdox --no-coverage
+        env:
+          # The hostname used to communicate with the Redis service container
+          TEST_REDIS_HOST: dev-redis
+          # The default Redis port
+          TEST_REDIS_PORT: 6379
